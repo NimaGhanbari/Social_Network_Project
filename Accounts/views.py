@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.conf import settings
 from rest_framework.views import APIView
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model 
 from rest_framework.response import Response
 import random
 from django.core.cache import cache
@@ -9,11 +9,11 @@ import mailtrap as mt
 import smtplib
 from email.message import EmailMessage
 from rest_framework import status
-
+User = get_user_model()
 
 def send_mail(email_r, code_r):
     # اگر از گوگل برای ارسال ایمیل هامون استفاده میکنیم مقدار هاستش به شکل زیر است
-    EMAIL_HOST = 'smpt.gmail.com'
+    EMAIL_HOST = 'smtp.gmail.com'
     # اگر از  فرستنده خارجی استفاده کردیم هاستش را به ما میدهند
     # ایمیلی که براش اپ پسورد زدیم که فرستتنده ایمیل است را مینویسیم
 
@@ -26,8 +26,7 @@ def send_mail(email_r, code_r):
     msg['Subject'] = 'verify'
     msg['From'] = EMAIL_HOST_USER
     msg['To'] = email_r
-    msg.set_content(code_r)
-
+    msg.set_content(str(code_r))
     with smtplib.SMTP_SSL(EMAIL_HOST, EMAIL_PORT_SSL) as server:
         server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
         server.send_message(msg)
@@ -39,11 +38,15 @@ class RejisterView(APIView):
         E_mail = request.data.get('email')
         password_1 = request.data.get('password_1')
         password_2 = request.data.get('password_2')
+        
         if password_1 != password_2:
-            return Response({'title': 'passwords did not match.'})
+            return Response({'title': 'passwords did not match.'},status=status.HTTP_400_BAD_REQUEST)
+        
+        #validator for email
+        
         try:
             o = User.objects.get(email=E_mail)
-            return Response({'title': 'A user has already registered with this profile'})
+            return Response({'title': 'A user has already registered with this profile'},status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
             #user = User.objects.create(email=E_mail, password=password)
             pass
