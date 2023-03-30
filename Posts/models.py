@@ -46,3 +46,33 @@ class Post_File(models.Model):
         
     def __str__(self):
         return self.title    
+
+
+class Comment(models.Model):
+    user = models.ForeignKey(to=User, on_delete= models.PROTECT)
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
+    text = models.TextField(max_length=2048)
+    is_approved = models.BooleanField(default=True)
+    like = models.BooleanField(default=False)
+    create_time = models.DateTimeField(_("create time"),auto_now_add=True)
+    update_time = models.DateTimeField(_("update time"),auto_now=True)
+    
+    class Meta:
+        db_table = "Comments"
+        verbose_name = _("Comment")
+        verbose_name_plural = _("Comments")
+        
+
+
+class Like(models.Model):
+    user = models.ForeignKey(to=User, on_delete= models.PROTECT)
+    post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
+    is_liked = models.BooleanField(default=False)
+    create_time = models.DateTimeField(_("create time"),auto_now_add=True)
+    update_time = models.DateTimeField(_("update time"),auto_now=True)
+    
+    class Meta:
+        db_table = "Likes"
+        verbose_name = _("Like")
+        verbose_name_plural = _("Likes")
+    
