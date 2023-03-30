@@ -62,9 +62,9 @@ class create_user_view(APIView):
         E_mail = request.data.get('email')
         code_rand = request.data.get('code')
         code_cache = cache.get(str(E_mail))
-        password = request.data.get('password_1')
+        password = request.data.get('password')
         if code_cache != code_cache:
             return Response({'title':'The entered code is invalid'},status= status.HTTP_400_BAD_REQUEST)
-        User.objects.create(email=E_mail, password=password)
+        User.objects.create_user(email=E_mail, password=password)
         return Response({'title':'Your information has been successfully registered'})
         
