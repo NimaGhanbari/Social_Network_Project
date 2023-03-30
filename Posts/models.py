@@ -4,17 +4,14 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 
-        
-    
-
 
 class Post(models.Model):
     title = models.CharField(verbose_name=_('title'), max_length=50)
-    avatar = models.ImageField(verbose_name=_('avatar'),blank=True)
+    avatar = models.ImageField(verbose_name=_('avatar'),blank=True,upload_to="media/")
     user = models.ForeignKey(User, on_delete= models.CASCADE)
-    caption = models.TextField(verbose_name=_('caption'),blank=True)
-    is_active = models.BooleanField(default=True)
-    is_public = models.BooleanField(default=True)
+    caption = models.TextField(verbose_name=_('caption'),blank=True,max_length=1024,null=True)
+    is_active = models.BooleanField(default=True,null=True)
+    is_public = models.BooleanField(default=True,null=True)
     create_time = models.DateTimeField(
         verbose_name=_("create time"), auto_now_add=True)
     update_time = models.DateTimeField(
@@ -36,7 +33,7 @@ class Post_File(models.Model):
     )
     title = models.CharField(_("title"),max_length=50)
     file_type =models.PositiveSmallIntegerField(_("file type"), choices=FILE_TYPES)
-    fil = models.FileField(_("file"),upload_to="files/%Y/%m/%d/")
+    fil = models.FileField(_("file"),upload_to="media/%Y/%m/%d/")
     post = models.ForeignKey('Post',verbose_name=_("Post"), on_delete=models.CASCADE)
     is_enable = models.BooleanField(_("is enable"),default=True)
     create_time = models.DateTimeField(_("create time"),auto_now_add=True)

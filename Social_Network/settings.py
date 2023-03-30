@@ -143,7 +143,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
     "ROTATE_REFRESH_TOKENS": False,
     "BLACKLIST_AFTER_ROTATION": False,
@@ -181,3 +181,9 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
+import os
+# برای اینکه دفعه اول این فایل را در مککانی که گفته شده درست کند
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+# برای فراخوانی یا به حساب برای بازیابی داده ها میباشد
+# یکجورایی مثل همان آدرسی که برای تمپلیت گداشتیم است
+MEDIA_URL = '/media/'
