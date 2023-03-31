@@ -10,6 +10,7 @@ import smtplib
 from email.message import EmailMessage
 from rest_framework import status
 User = get_user_model()
+from secrets import compare_digest
 
 def send_mail(email_r, code_r):
     # اگر از گوگل برای ارسال ایمیل هامون استفاده میکنیم مقدار هاستش به شکل زیر است
@@ -63,7 +64,7 @@ class create_user_view(APIView):
         code_rand = request.data.get('code')
         code_cache = cache.get(str(E_mail))
         password = request.data.get('password')
-        if code_cache != code_cache:
+        if not compare_digest(code_cache, code_rand):
             return Response({'title':'The entered code is invalid'},status= status.HTTP_400_BAD_REQUEST)
         User.objects.create_user(email=E_mail, password=password)
         return Response({'title':'Your information has been successfully registered'})
