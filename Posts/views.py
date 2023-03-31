@@ -1,10 +1,10 @@
 from django.shortcuts import render,get_object_or_404
-from .models import Post, Post_File
+from .models import Post, Post_File , Comment
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import PostsSerializer,PostSerSerializer
+from .serializers import PostsSerializer,PostSerSerializer,CommentSerializer
 from rest_framework.permissions import IsAuthenticated
 
 
@@ -75,4 +75,28 @@ class PostSerView(APIView):
         post = get_object_or_404(Post,pk=pk)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
+    
+class CommentView(APIView):
+    permission_classes = [IsAuthenticated]
+    def get(self,request,pk):
+        try:
+            post = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response({'title':'not found'},status=status.HTTP_404_NOT_FOUND)
+        #comments = post.comments.filter(is_approved=True)
+        comments = Comment.objects.filter(post=post,is_approved=True)
+        serialized = CommentSerializer(comments,many=True, context={'request': request})
+        return Response(serialized.data)
+    
+    def post(self,request,pk):
+        try:
+            post = Post.objects.get(pk=pk)
+        except Post.DoesNotExist:
+            return Response({'title':'not found'},status=status.HTTP_404_NOT_FOUND)
+        serialized = CommentSerializer(data=request.data)
+        if serialized.is_valid():
+            serialized.save(post=post, user=request.user)
+            return Response(status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
     
