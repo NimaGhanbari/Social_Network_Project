@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework import status
-from .serializers import PostsSerializer,PostSerSerializer,CommentSerializer
+from .serializers import PostsSerializer,PostSerSerializer,CommentSerializer,ParCommentSerializer
 from rest_framework.permissions import IsAuthenticated
-
+from django.shortcuts import get_object_or_404
 
 class PostListView(APIView):
     def get(self, request):
@@ -99,4 +99,38 @@ class CommentView(APIView):
             serialized.save(post=post, user=request.user)
             return Response(status=status.HTTP_201_CREATED)
         return Response(status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+class CommentReply(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self,request,pk_post,pk_comment):
+        post = get_object_or_404(Post,pk=pk_post)
+        comment = get_object_or_404(Comment,pk=pk_comment,post=post)
+        serialized = ParCommentSerializer(data=request.data)
+        if serialized.is_valid():
+            serialized.save(parentComment= comment,user=request.user)
+            return Response({'title':'mission accomplished.'},status=status.HTTP_201_CREATED)
+        return Response(status=status.HTTP_400_BAD_REQUEST)
+        
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     

@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'Accounts',
     'rest_framework_simplejwt',
     'Posts',
+    'nested_admin',
 
 ]
 

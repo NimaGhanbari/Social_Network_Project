@@ -74,4 +74,18 @@ class Like(models.Model):
         db_table = "Likes"
         verbose_name = _("Like")
         verbose_name_plural = _("Likes")
+
+
+
+class CommentReply(models.Model):
+    parentComment = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete= models.PROTECT)
+    text = models.TextField(max_length=1048)
+    is_approved = models.BooleanField(default=True)
+    create_time = models.DateTimeField(_("create time"),auto_now_add=True)
+    update_time = models.DateTimeField(_("update time"),auto_now=True)
     
+    class Meta:
+        db_table = "CommentReplys"
+        verbose_name = _("CommentReply")
+        verbose_name_plural = _("CommentReplys")
