@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Post,Post_File
+from .models import Post,Post_File,Comment
 
 
 class FileSerializer(serializers.ModelSerializer):
@@ -27,3 +27,16 @@ class PostSerSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'user':{'read_only':True}
         }
+        
+        
+class CommentSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Comment
+        fields = ('user','text','create_time','update_time')
+        #این رید انلی فقط برای ان است که هنگام خوانده شدن از دیتابیس یوزر را بفرستد و برای ذخیره کردندر دیتابیس کاری به یوزر نداشته باشد
+        extra_kwargs = {
+            'user':{'read_only':True}
+        }
+        
+        

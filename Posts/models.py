@@ -50,10 +50,9 @@ class Post_File(models.Model):
 
 class Comment(models.Model):
     user = models.ForeignKey(to=User, on_delete= models.PROTECT)
-    post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(to=Post,related_name='comments', on_delete=models.CASCADE)
     text = models.TextField(max_length=2048)
     is_approved = models.BooleanField(default=True)
-    like = models.BooleanField(default=False)
     create_time = models.DateTimeField(_("create time"),auto_now_add=True)
     update_time = models.DateTimeField(_("update time"),auto_now=True)
     
