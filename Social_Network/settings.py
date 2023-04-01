@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'Posts',
     'nested_admin',
+    'Friendship',
 
 ]
 
