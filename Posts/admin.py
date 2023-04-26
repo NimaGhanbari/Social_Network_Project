@@ -33,7 +33,9 @@ class PostFileAdmin(NestedModelAdmin):
     search_fields = ['title']
     inlines = [FileInLineAdmin,CommentInLineAdmin,LikeInLineAdmin]
     
+    def has_delete_permission(self, request,obj=None):
+        return False
     
-
+    
     
     

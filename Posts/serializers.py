@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Post,Post_File,Comment,CommentReply
-
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 class FileSerializer(serializers.ModelSerializer):
     file_type = serializers.SerializerMethodField()
@@ -11,12 +12,13 @@ class FileSerializer(serializers.ModelSerializer):
     def get_file_type(self,obj):
         return obj.get_file_type_display()   
 
-
 class PostsSerializer(serializers.ModelSerializer):
-    #file_set = FileSerializer(many= True)
+
     class Meta:
         model = Post
-        fields = ('id','title','avatar','caption','is_active','is_public')
+        fields = ('id','title','avatar','caption','is_active','is_public','user')
+        
+    
         
         
 class PostSerSerializer(serializers.ModelSerializer):

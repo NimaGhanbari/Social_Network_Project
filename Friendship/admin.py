@@ -5,10 +5,10 @@ from .models import Friendship
 class FriendshipAdmin(admin.ModelAdmin):
     list_display = ['id','request_from','request_to','is_accepted']
     
-    def has_add_permission(self, request):
+    def has_add_permission(self, request,obj=None):
         return False
-    def has_change_permission(self, request):
+    def has_change_permission(self, request,obj=None):
         return False
-    def has_delete_permission(self, request):
+    def has_delete_permission(self, request,obj=None):
         return False
     

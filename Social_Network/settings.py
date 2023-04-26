@@ -11,23 +11,19 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+#A series of security information is stored in this file.
 from .local_settings import *
 from datetime import timedelta
+import os
+
+
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zk=6lvkuc9d+=h)k7-#x&8madr(bfz2y-1!5)59y50$5oks^=*'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-
-
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -35,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #My own Apps
     'rest_framework',
     'Accounts',
     'rest_framework_simplejwt',
@@ -78,7 +75,6 @@ WSGI_APPLICATION = 'Social_Network.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
@@ -134,7 +130,7 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+#for jwt package
 REST_FRAMEWORK = {
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -144,6 +140,7 @@ REST_FRAMEWORK = {
 
 }
 
+#More settings of the simple jwt package
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
@@ -183,9 +180,7 @@ SIMPLE_JWT = {
     "SLIDING_TOKEN_OBTAIN_SERIALIZER": "rest_framework_simplejwt.serializers.TokenObtainSlidingSerializer",
     "SLIDING_TOKEN_REFRESH_SERIALIZER": "rest_framework_simplejwt.serializers.TokenRefreshSlidingSerializer",
 }
-import os
-# برای اینکه دفعه اول این فایل را در مککانی که گفته شده درست کند
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
-# برای فراخوانی یا به حساب برای بازیابی داده ها میباشد
-# یکجورایی مثل همان آدرسی که برای تمپلیت گداشتیم است
-MEDIA_URL = '/media/'
+
+MEDIA_URL = f'{BASE_URL}media/'
