@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 User = get_user_model()
 
 class Friendship(models.Model):
-    request_from = models.ForeignKey(to=User, on_delete=models.PROTECT,related_name='friend_request_from')
+    request_from = models.ForeignKey(to=User, on_delete=models.CASCADE,related_name='friend_request_from')
     request_to = models.ForeignKey(to=User, on_delete=models.CASCADE,related_name='friend_request_to')
     is_accepted = models.BooleanField(default=False)
     create_time = models.DateTimeField(

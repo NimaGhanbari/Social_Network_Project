@@ -3,7 +3,7 @@ from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
 class Country(models.Model):
-    name = models.CharField(max_length=60)
+    name = models.CharField(max_length=62)
     abbr = models.CharField(max_length=6)
     is_enable = models.BooleanField(default=True)
     create_time = models.DateTimeField(verbose_name=_("create time"),auto_now_add=True)
@@ -15,19 +15,18 @@ class Country(models.Model):
         verbose_name_plural = _("Countries")
         
     def __str__(self):
-        return self.title
+        return self.name
     
 
 
 class Profile(models.Model):
-    user = models.OneToOneField(to=settings.AUTH_USER_MODEL, on_delete= models.CASCADE)
-    avatar = models.ImageField(verbose_name=_("avatar"),upload_to='Profiles',blank=True)
+    user = models.OneToOneField(to=settings.AUTH_USER_MODEL,related_name='profiles', on_delete= models.CASCADE)
+    avatar = models.ImageField(verbose_name=_("avatar"),upload_to='Profiles/',blank=True)
     bio = models.TextField(verbose_name=_("bio"),blank=True,null=True)
     phone_number = models.BigIntegerField(verbose_name=_("phone number"),blank=True,null=True)
-    country =  models.ForeignKey(Country, on_delete= models.CASCADE)
+    country =  models.ForeignKey(Country, on_delete= models.CASCADE,null=True)
     create_time = models.DateTimeField(verbose_name=_("create time"),auto_now_add=True)
     update_time = models.DateTimeField(verbose_name=_("update time"),auto_now=True)
-    
     
     
 class Device(models.Model):

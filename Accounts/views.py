@@ -1,24 +1,29 @@
 from django.shortcuts import render
 from django.conf import settings
-from rest_framework.views import APIView
 from django.contrib.auth import get_user_model 
-from rest_framework.response import Response
-import random
 from django.core.cache import cache
+
+from rest_framework.views import APIView
+from rest_framework_simplejwt.views import TokenObtainPairView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
+
 import mailtrap as mt
 import smtplib
 from email.message import EmailMessage
-from rest_framework import status
-User = get_user_model()
 from secrets import compare_digest
 
+from .models import Profile
+from .serializers import ProfileSerializer
+
+import random
+
+User = get_user_model()
+
+
 def send_mail(email_r, code_r):
-    # اگر از گوگل برای ارسال ایمیل هامون استفاده میکنیم مقدار هاستش به شکل زیر است
     EMAIL_HOST = 'smtp.gmail.com'
-    # اگر از  فرستنده خارجی استفاده کردیم هاستش را به ما میدهند
-    # ایمیلی که براش اپ پسورد زدیم که فرستتنده ایمیل است را مینویسیم
-
-
     EMAIL_HOST_USER = 'nimadfm1400@gmail.com'
     EMAIL_PORT_SSL = 465
     EMAIL_HOST_PASSWORD = 'eillarjyqtqczbsl'
@@ -49,12 +54,12 @@ class RejisterView(APIView):
             o = User.objects.get(email=E_mail)
             return Response({'title': 'A user has already registered with this profile'},status=status.HTTP_400_BAD_REQUEST)
         except User.DoesNotExist:
-            #user = User.objects.create(email=E_mail, password=password)
             pass
 
         code_rand = random.randint(100000, 999999)
-        cache.set(str('email'), code_rand, 3*60)
+        cache.set(str(E_mail), str(code_rand),3*60)
         send_mail(E_mail, code_rand)
+
         return Response({'title': 'The code has been emailed to you. Please enter it.'})
 
 
@@ -63,9 +68,29 @@ class create_user_view(APIView):
         E_mail = request.data.get('email')
         code_rand = request.data.get('code')
         code_cache = cache.get(str(E_mail))
-        password = request.data.get('password')
+        password = request.data.get('password_1')
         if not compare_digest(code_cache, code_rand):
             return Response({'title':'The entered code is invalid'},status= status.HTTP_400_BAD_REQUEST)
         User.objects.create_user(email=E_mail, password=password)
         return Response({'title':'Your information has been successfully registered'})
         
+
+class SeeProfoleView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def get(self,request):
+        user = request.user
+        profile = user.profiles
+        #profile = Profile.objects.get(user=request.user)
+        
+        serialized = ProfileSerializer(profile, context={'request': request})
+        return Response(serialized.data,status=status.HTTP_200_OK)
+        
+
+
+#class MyTokenObtainPairView(TokenObtainPairView):
+#
+#    serializer_class = MyTokenObtainPairSerializer
+
+"""class EmailTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer"""

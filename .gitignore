@@ -173,4 +173,5 @@ cython_debug/
 my_project/
 #.gitignore
 files/
+migrations/
 # End of https://www.toptal.com/developers/gitignore/api/django
