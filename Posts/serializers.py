@@ -3,6 +3,13 @@ from .models import Post,Post_File,Comment,CommentReply
 from django.contrib.auth import get_user_model
 User = get_user_model()
 
+class UserSerializers(serializers.ModelSerializer):
+    
+    class Meta:
+        model = User
+        fields = ['id','username']
+        
+
 class FileSerializer(serializers.ModelSerializer):
     file_type = serializers.SerializerMethodField()
     class Meta:
@@ -13,7 +20,7 @@ class FileSerializer(serializers.ModelSerializer):
         return obj.get_file_type_display()   
 
 class PostsSerializer(serializers.ModelSerializer):
-
+    user = UserSerializers()
     class Meta:
         model = Post
         fields = ('id','title','avatar','caption','is_active','is_public','user')
@@ -52,4 +59,4 @@ class ParCommentSerializer(serializers.ModelSerializer):
             'user':{'read_only':True}
         }
         
-        
+
