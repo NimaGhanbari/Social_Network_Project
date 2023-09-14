@@ -154,14 +154,14 @@ class CommentReply(APIView):
         return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-class ApiTemperture(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        city_name = request.data.get('city_name')
-        url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}"
-        r = requests.get(url)
-        data = r.json()
-        if data['cod'] == 200:
-            return Response(r.json())
-        return Response(status=status.HTTP_400_BAD_REQUEST)
+#class ApiTemperture(APIView):
+#    permission_classes = [IsAuthenticated]
+#
+#    def post(self, request):
+#        city_name = request.data.get('city_name')
+#        url = f"https://api.openweathermap.org/data/2.5/weather?q={city_name}&appid={api_key}"
+#        r = requests.get(url)
+#        data = r.json()
+#        if data['cod'] == 200:
+#            return Response(r.json())
+#        return Response(status=status.HTTP_400_BAD_REQUEST)
